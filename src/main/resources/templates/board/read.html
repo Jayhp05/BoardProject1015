@@ -1,38 +1,66 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
-    <th:block th:fragment="content">
-        <h1 class="mt-4">Read Page</h1>
-        <div class="form-group">
-            <label>Bno:</label>
-            <input type="text" name="bno" class="form-control" th:value="${dto.bno}" readonly>
-        </div>
-        <div class="form-group">
-            <label>Title:</label>
-            <input type="text" name="title" class="form-control" th:value="${dto.title}" readonly>
-        </div>
-        <div class="form-group">
-            <label>Content:</label>
-            <textarea name="content" rows="5" class="form-control" readonly>[[${dto.content}]]</textarea>
-        </div>
-        <div class="form-group">
-            <label>Writer:</label>
-            <input type="text" name="writer" class="form-control" th:value="${dto.writerName}" readonly>
-        </div>
-        <div class="form-group">
-            <label>RegDate:</label>
-            <input type="text" name="regDate" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-        </div>
-        <div class="form-group">
-            <label>ModifyDate:</label>
-            <input type="text" name="modDate" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
-        </div>
-        <a th:href="@{/board/modify(bno=${dto.bno}, page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
-            <button type="button" class="btn btn-primary form-group">Modify</button>
-        </a>
-        <a th:href="@{/board/list(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
-            <button type="button" class="btn btn-info form-group">List</button>
-        </a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+
+    <th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
+        <th:block th:fragment="content">
+            <h1 class="mt-4">Read Page</h1>
+            <div class="form-group">
+                <label>Bno:</label>
+                <input type="text" name="bno" class="form-control" th:value="${dto.bno}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Title:</label>
+                <input type="text" name="title" class="form-control" th:value="${dto.title}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Content:</label>
+                <textarea name="content" rows="5" class="form-control" readonly>[[${dto.content}]]</textarea>
+            </div>
+            <div class="form-group">
+                <label>Writer:</label>
+                <input type="text" name="writer" class="form-control" th:value="${dto.writerName}" readonly>
+            </div>
+            <div class="form-group">
+                <label>RegDate:</label>
+                <input type="text" name="regDate" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+            </div>
+            <div class="form-group">
+                <label>ModifyDate:</label>
+                <input type="text" name="modDate" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+            </div>
+            <a th:href="@{/board/modify(bno=${dto.bno}, page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
+                <button type="button" class="btn btn-primary form-group">Modify</button>
+            </a>
+            <a th:href="@{/board/list(page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
+                <button type="button" class="btn btn-info form-group">List</button>
+            </a>
+            <div class="mt-4">
+                <h5>
+                    <span class="badge result-item replyCount">
+                        Reply Count [[${dto.replyCount}]]
+                    </span>
+                </h5>
+            </div>
+            <div class="list-group replyList">
+
+            </div>
+        </th:block>
     </th:block>
-</th:block>
+    <script th:inline="javascript">
+        $(document).ready(function (){
+            var bno = [[${dto.bno}]];
+
+            var listGroup = $(".replyList"); //replyList 앞에 '.' 무조건 해줘야됨 ##중요##
+
+            $(".replyCount").click(function (){
+                $.getJSON('/replies/board/' + bno, function (jsonArr){
+                    console.log(jsonArr); // replyCount를 클릭했을 때, F12를 눌러 콘솔창에서 확인하는 명령어
+                })
+            });
+        })
+    </script>
+
 </html>
